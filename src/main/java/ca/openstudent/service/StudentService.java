@@ -1,15 +1,21 @@
 package ca.openstudent.service;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import ca.openstudent.Student;
 import ca.openstudent.dao.impl.StudentDaoImpl;
+import ca.openstudent.model.Student;
+import ca.openstudent.model.StudentRegistry;
 
-public class StudentService {
+public class StudentService implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	StudentDaoImpl studentDAO = StudentDaoImpl.Factory.getInstance();//.getInstance();
 		
     public Long create(Student Student)
@@ -95,8 +101,8 @@ public class StudentService {
 	 * @param name
 	 * @return
 	 */
-	public List<String> findByName(String name) {
-		return studentDAO.findByName(name);
+	public Collection<String> findByName(String name) {
+		return StudentRegistry.findNamesByName(name);
 		
 	}
 	

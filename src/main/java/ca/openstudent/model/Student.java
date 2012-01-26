@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ca.openstudent;
+package ca.openstudent.model;
 
 import java.io.Serializable;
 
@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
@@ -24,23 +25,33 @@ import org.primefaces.model.SelectableDataModel;
  */
 @Entity
 @NamedQueries({
-	@NamedQuery(name="student.getAll", query = "select s from Student as s")
+	@NamedQuery(name="student.getAll", query = "select s from Student as s"),
+	@NamedQuery(name="student.findByName", query = "select s from Student as s where lower(s.legalFirstName) like :name or lower(s.legalLastName) like :name or lower(s.legalMiddleName) like :name or lower(s.usualFirstName) like :name or lower(s.usualLastName) like :name"), 
+	@NamedQuery(name="student.findByGender", query = "select s from Student as s where s.gender = :gender"),
 })
-public class Student implements Serializable{
-//extends ListDataModel<Student> implements SelectableDataModel<Student>,
-/*  Todo: code for StudentModel, tableDataModel in view, probably need to move this commented code into its own class.
-	@Override
-	public Student getRowData(String arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	@Override
-	public Object getRowKey(Student student) {
-		// TODO Auto-generated method stub
-		return null;//student.getModel();
-	}
-*/
+//if( s.getLegalFirstName().toLowerCase().startsWith(name.toLowerCase())) {
+//	tempName = s.getLegalFirstName();
+//}
+//else if( s.getLegalLastName().toLowerCase().startsWith(name.toLowerCase())) {
+//	tempName = s.getLegalLastName();
+//}
+//else if( s.getLegalMiddleName().toLowerCase().startsWith(name.toLowerCase())) {
+//	tempName = s.getLegalMiddleName();
+//}
+//else if( s.getUsualLastName().toLowerCase().startsWith(name.toLowerCase())) {
+//	tempName = s.getUsualLastName();
+//}
+//else if( s.getUsualFirstName().toLowerCase().startsWith(name.toLowerCase())) {
+//	tempName = s.getUsualFirstName();
+//}
+//
+//if( !nameList.contains(tempName) && !tempName.equals("") ) {
+//	//Only add if not already in list or if not empty
+//	nameList.add(tempName);
+//}
+
+public class Student implements Serializable{
 	/**
 	 * 
 	 */
@@ -82,7 +93,12 @@ public class Student implements Serializable{
 	
 	private static long count = 111111;
 	
+	@OneToOne(optional = false)
+    private Address homeAddress;
 	
+	@OneToOne(optional = true)
+    private Address mailAddress;
+
 	public Student(int pen, String gender, Date birthdate, String legalFirstName, String legalMiddleName, String legalLastName) {
 		this(pen, gender, birthdate, legalFirstName, legalMiddleName, legalLastName,"", "", "");
 	}
@@ -101,7 +117,7 @@ public class Student implements Serializable{
 	 * @param usualLastName
 	 */
 	public Student(int pen, String gender, Date birthdate, String legalFirstName, String legalMiddleName, String legalLastName,  String usualFirstName, String usualMiddleName, String usualLastName) {
-		this.id = count++;
+//		this.id = count++;
 		this.pen = pen;
 		
 		this.gender = gender;
@@ -289,4 +305,32 @@ public class Student implements Serializable{
         return String.format("Student[id=%d, legalFirstName=%s, legalLastName=%s, dateOfBirth=%s, PEN=%d]", 
             id, legalFirstName, legalLastName, birthdate, pen);
     }
+
+	/**
+	 * @return the homeAddress
+	 */
+	public Address getHomeAddress() {
+		return homeAddress;
+	}
+
+	/**
+	 * @param homeAddress the homeAddress to set
+	 */
+	public void setHomeAddress(Address homeAddress) {
+		this.homeAddress = homeAddress;
+	}
+
+	/**
+	 * @return the mailAddress
+	 */
+	public Address getMailAddress() {
+		return mailAddress;
+	}
+
+	/**
+	 * @param mailAddress the mailAddress to set
+	 */
+	public void setMailAddress(Address mailAddress) {
+		this.mailAddress = mailAddress;
+	}
 }

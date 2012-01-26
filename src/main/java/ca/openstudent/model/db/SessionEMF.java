@@ -5,7 +5,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
@@ -18,7 +22,9 @@ import javax.persistence.PersistenceException;
 
 import org.eclipse.persistence.config.PersistenceUnitProperties;
 
-import ca.openstudent.Student;
+import ca.openstudent.Name;
+import ca.openstudent.model.Student;
+
 
 
 /**
@@ -83,17 +89,23 @@ public class SessionEMF implements Serializable
 	 */
 	private void createDatabaseSampleData(EntityManager em)  
 	{
-		Student s1 = new Student();
-		s1.setLegalFirstName("John");
-		s1.setLegalLastName("Clark");
-
-		Student s2 = new Student();
-		s2.setLegalFirstName("Alice");
-		s2.setLegalLastName("Wong");
-		
 		em.getTransaction().begin();
-		em.persist(s1);
-		em.persist(s2);
+		int i = 0; // for pen numbers
+		em.persist(new Student( ++i, "Male", new Date(),"Administrator", "A", "Admin"));
+		em.persist(new Student( ++i, "Male", new Date(), "Warren", "E", "WHite" ));
+		em.persist(new Student( ++i, "Female", new Date(), "Mr.", "D", "Skunk"));
+		em.persist(new Student( ++i, "Male", new Date(), "Tim", "", "Agnew")); 
+		em.persist(new Student( ++i, "Male", new Date(), "Gregg", "", "Ferrie")); 
+
+		Name tempName = new Name();
+		for(; i < tempName.getLastNameListSize(); i++) {
+
+			String gender = "Female";
+			if( (i % 2) == 0) {
+				gender = "Male";
+			}
+			em.persist(new Student(i, gender, new Date(), tempName.getFirstNameList().get(i), "", tempName.getLastNameList().get(i) )); 
+		}
 		em.getTransaction().commit();
 		em.close();
 	}

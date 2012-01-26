@@ -6,7 +6,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
-import ca.openstudent.Student;
+import ca.openstudent.model.Student;
 import ca.openstudent.model.StudentRegistry;
 
 @ManagedBean
