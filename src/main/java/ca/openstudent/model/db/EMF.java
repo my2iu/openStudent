@@ -1,4 +1,4 @@
-package ca.openstudent.model;
+package ca.openstudent.model.db;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -17,7 +17,7 @@ public class EMF
 	 * without worrying they'll affect someone else. This flag enables
 	 * that feature.
 	 */
-	static boolean isUseSessionDemoDB = false;
+	static boolean isUseSessionDemoDB = true;
 	
 	/**
 	 * Singleton EntityManagerFactory for accessing the main database 

@@ -1,22 +1,33 @@
-package ca.openstudent.model;
+package ca.openstudent.model.db;
 
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceException;
 
 import org.eclipse.persistence.config.PersistenceUnitProperties;
+
+import ca.openstudent.Student;
 
 
 /**
  * For debug purposes, it's often useful to have a different
  * in-memory database per session. This class manages that
  */
+@ManagedBean
 @SessionScoped
-public class SessionEMF 
+public class SessionEMF implements Serializable
 {
 	/**
 	 * Singleton EntityManagerFactory for accessing the per-session
@@ -30,39 +41,61 @@ public class SessionEMF
 	 */
 	private synchronized void createEMF()
 	{
-		String jdbcString = "derby:memory:" + getUniqueDatabaseID() + ";create=true";
+		String jdbcString = "jdbc:derby:memory:" + getUniqueDatabaseID() + ";create=true";
 		String jdbcDriver = "org.apache.derby.jdbc.EmbeddedDriver";
 		
 		if (emf != null) return;
 
-		// Create a database to use for testing
-		createDatabase(jdbcString, jdbcDriver);
-		createDatabaseSampleData(jdbcString, jdbcDriver);
+		// TODO For now, I'll just let JPA create the database automatically,
+		//   but it might be better to create it manually in order to make sure
+		//   that all the settings and indices are set correctly.
+//		// Create a database to use for testing
+//		try {
+//			try { Class.forName(jdbcDriver); } catch (ClassNotFoundException e) {}
+//			
+//			Connection con = DriverManager.getConnection(jdbcString);
+//			createDatabase(con);
+//			con.close();
+//		} catch (SQLException e)
+//		{
+//			// Wrap the SQLException in a PersistenceException so that the error
+//			// occurs at the same level as a normal exception triggered by 
+//			// the persistence layer
+//			throw new PersistenceException(e);
+//		}
 		
 		// Create a custom connection that connects to the temporary test database
 		// for this session
 		Map<String, String> properties = new HashMap<String, String>();
 		properties.put(PersistenceUnitProperties.JDBC_DRIVER, jdbcDriver);
 		properties.put(PersistenceUnitProperties.JDBC_URL, jdbcString);
+		properties.put(PersistenceUnitProperties.JDBC_USER, null);
+		properties.put(PersistenceUnitProperties.JDBC_PASSWORD, null);
 		emf = Persistence.createEntityManagerFactory("openStudent", properties);
+		
+		// Put some sample data in the database so that there's something available
+		// to test with
+		createDatabaseSampleData(emf.createEntityManager());
 	}
 	
 	/** 
-	 * Manually creates the tables for a sample OpenStudent database
-	 */
-	public void createDatabase(String jdbcString, String jdbcDriver) 
-	{
-		
-		// TODO Auto-generated method stub
-		
-	}
-	/** 
 	 * Manually creates some sample data for a sample OpenStudent database
 	 */
-	private void createDatabaseSampleData(String jdbcString, String jdbcDriver) 
+	private void createDatabaseSampleData(EntityManager em)  
 	{
-		// TODO Auto-generated method stub
+		Student s1 = new Student();
+		s1.setLegalFirstName("John");
+		s1.setLegalLastName("Clark");
+
+		Student s2 = new Student();
+		s2.setLegalFirstName("Alice");
+		s2.setLegalLastName("Wong");
 		
+		em.getTransaction().begin();
+		em.persist(s1);
+		em.persist(s2);
+		em.getTransaction().commit();
+		em.close();
 	}
 
 
@@ -72,6 +105,8 @@ public class SessionEMF
 	 */
 	public EntityManagerFactory getEMF()
 	{
+		if (emf == null)
+			createEMF();
 		return emf;
 	}
 	
@@ -82,8 +117,7 @@ public class SessionEMF
 	public static SessionEMF instance()
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
-		SessionEMF toReturn = (SessionEMF)context.getExternalContext().getSessionMap()
-				.get("sessionEMF");
+		SessionEMF toReturn = (SessionEMF)context.getExternalContext().getSessionMap().get("sessionEMF");
 		if (toReturn == null)
 			toReturn = context.getApplication().evaluateExpressionGet(context, "#{sessionEMF}", SessionEMF.class);
 		return toReturn;
@@ -99,5 +133,5 @@ public class SessionEMF
 		dbId++;
 		return "db" + Integer.toString(dbId);
 	}
-	private static int dbId = 1;
+	private static int dbId = 0;
 }
