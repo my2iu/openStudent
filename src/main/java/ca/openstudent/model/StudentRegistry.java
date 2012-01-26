@@ -50,17 +50,47 @@ public class StudentRegistry
 		});
 	}
 
+	public static void persist(final Student student)
+	{
+		Db.update(new Db.Update() {
+			public void execute(EntityManager em) {
+				em.persist(student);
+			}
+		});
+	}
+
+	public static void delete(final Student student)
+	{
+		Db.update(new Db.Update() {
+			public void execute(EntityManager em) {
+				em.remove(student);
+			}
+		});
+	}
+
 	public static List<Student> findByName(final String name) 
 	{
 		return Db.query(new Db.Query() {
 			public List<Student> execute(EntityManager em) {
 				Query query = em.createNamedQuery("student.findByName");
-				query.setParameter("name", "%" + name);
+				query.setParameter("name", name.toLowerCase() + "%");
 				return query.getResultList();
 			}
 		});
 	}
-	
+
+	public static List<Student> findByNameAndGender(final String name, final String gender) 
+	{
+		return Db.query(new Db.Query() {
+			public List<Student> execute(EntityManager em) {
+				Query query = em.createNamedQuery("student.findByName");
+				query.setParameter("gender", gender);
+				query.setParameter("name", name.toLowerCase() + "%");
+				return query.getResultList();
+			}
+		});
+	}
+
 	public static List<Student> findByGender(final String gender) 
 	{
 		return Db.query(new Db.Query() {
@@ -78,8 +108,8 @@ public class StudentRegistry
 		//   if this query is used a lot. This should probably be cached somehow
 		return Db.query(new Db.Query() {
 			public Collection<String> execute(EntityManager em) {
-				Query query = em.createNamedQuery("student.findByGender");
-				query.setParameter("name", name + "%");
+				Query query = em.createNamedQuery("student.findByName");
+				query.setParameter("name", name.toLowerCase() + "%");
 				List<Student> students = query.getResultList();
 				Set<String> nameList = new HashSet<String>();
 				for (Student s: students)

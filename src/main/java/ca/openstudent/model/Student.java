@@ -27,6 +27,7 @@ import org.primefaces.model.SelectableDataModel;
 @NamedQueries({
 	@NamedQuery(name="student.getAll", query = "select s from Student as s"),
 	@NamedQuery(name="student.findByName", query = "select s from Student as s where lower(s.legalFirstName) like :name or lower(s.legalLastName) like :name or lower(s.legalMiddleName) like :name or lower(s.usualFirstName) like :name or lower(s.usualLastName) like :name"), 
+	@NamedQuery(name="student.findByNameAndGender", query = "select s from Student as s where s.gender = :gender and (lower(s.legalFirstName) like :name or lower(s.legalLastName) like :name or lower(s.legalMiddleName) like :name or lower(s.usualFirstName) like :name or lower(s.usualLastName) like :name)"), 
 	@NamedQuery(name="student.findByGender", query = "select s from Student as s where s.gender = :gender"),
 })
 
