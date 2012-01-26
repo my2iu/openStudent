@@ -16,7 +16,7 @@ public class StudentService implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	StudentDaoImpl studentDAO = StudentDaoImpl.Factory.getInstance();//.getInstance();
+//	StudentDaoImpl studentDAO = StudentDaoImpl.Factory.getInstance();//.getInstance();
 		
     public Long create(Student Student)
     {
@@ -24,12 +24,9 @@ public class StudentService implements Serializable{
         {
             throw new RuntimeException("Unable to create Student. Student object is null.");
         }
-        Long StudentId = this.getMaxStudentId();
-        Student.setId((long)StudentId);
-        
-        studentDAO.save(Student);
+        StudentRegistry.persist(Student);
        
-        return StudentId;
+        return Student.getId();
     }
 
     public void delete(Student student)
@@ -38,7 +35,7 @@ public class StudentService implements Serializable{
         {
             throw new RuntimeException("Unable to delete Student. Student object is null.");
         }
-        studentDAO.delete(student.getId(), student.getClass());
+        StudentRegistry.delete(student);
     }
 
     public Collection<Student> getAllStudents()
@@ -48,7 +45,7 @@ public class StudentService implements Serializable{
 
     public Student getStudent(Long StudentId)
     {
-        return studentDAO.findById(StudentId);
+    	return StudentRegistry.find(StudentId);
     }
 
     public Collection<Student> searchStudents(String Studentname)
@@ -113,7 +110,10 @@ public class StudentService implements Serializable{
 
 	
 	public List<Student> searchStudents(String name, String gender) {
-		return studentDAO.findStudentsByName(name, gender);
+		if (gender == null || "".equals(gender))
+			return 	StudentRegistry.findByName(name);
+		else
+			return 	StudentRegistry.findByNameAndGender(name, gender);
 	}
     
     
