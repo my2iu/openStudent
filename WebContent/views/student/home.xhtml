@@ -1,10 +1,20 @@
-<ui:composition  
+<html
   xmlns="http://www.w3.org/1999/xhtml"   
   xmlns:ui="http://java.sun.com/jsf/facelets"
   xmlns:h="http://java.sun.com/jsf/html"
-  xmlns:p="http://primefaces.org/ui"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:p="http://primefaces.org/ui">
+  <f:metadata>
+	<f:viewParam name="studentId" value="#{student.studentId}" required="true"/>
+  </f:metadata>
+
+
+
+<ui:composition  
   template="/templates/basicTemplate.xhtml">
 <ui:define name="content">
+
+<h:form>
 
 <p:tabView dynamic="true" cache="false" id="studentsTabView">
 <p:tab title="Home" id="homeTab">
@@ -21,5 +31,12 @@
 </p:tab>
 </p:tabView>
 
+		<h:commandButton value="Update" action="#{student.update}">
+			<f:param name="studentId" value="#{student.studentId}"/>
+		</h:commandButton>
+
+</h:form>
+
 </ui:define>
 </ui:composition>
+</html>
