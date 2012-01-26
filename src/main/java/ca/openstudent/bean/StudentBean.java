@@ -14,6 +14,7 @@ import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 //import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -22,11 +23,13 @@ import javax.faces.event.AjaxBehaviorEvent;
 import org.primefaces.event.ToggleEvent;
 
 import ca.openstudent.Student;
+import ca.openstudent.model.StudentRegistry;
 
+@ViewScoped
 @ManagedBean (name="student")
 public class StudentBean implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+//	private static final long serialVersionUID = 1L;
 	
 	private List<Student> studentArrayList; 
 	private static List<Student> studentList;
@@ -54,11 +57,21 @@ public class StudentBean implements Serializable {
 		return studentArrayList;
 	}
 	
+	long studentIdForView;
+	public void setStudentId(long id) {
+		studentIdForView = id;
+	}
+	public long getStudentId() {
+		return studentIdForView;
+	}
+	
 	public Student getStudent() {
+		if (student == null) student = StudentRegistry.find(studentIdForView);
 		return this.student;
 	}
 	
 	public Student getDetails() {
+		if (student == null) student = StudentRegistry.find(studentIdForView);
 		return student;
 	}
 	public String showDetails(Student student)
@@ -69,11 +82,13 @@ public class StudentBean implements Serializable {
 	
 	public String update()
 	{
+		StudentRegistry.merge(student);
 	  //  student = studentSessionBean.update(student);
-	    FacesContext context = FacesContext.getCurrentInstance();
-	    context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-	            "Sucessful", "Record successfully saved!"));
-	    return "SAVED";
+//	    FacesContext context = FacesContext.getCurrentInstance();
+//	    context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+//	            "Sucessful", "Record successfully saved!"));
+		// go back to the same home view
+	    return "list?faces-redirect=true";
 	}
 
 	public String findByName(AjaxBehaviorEvent event) {
