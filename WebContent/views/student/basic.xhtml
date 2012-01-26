@@ -57,14 +57,15 @@
         <h:outputLabel value="Grade:"/>
         <h:inputText id="studentGrade" value="#{student.details.grade}"/>
         <h:message for="studentGrade" />
-
+<!-- 
         <h:outputLabel value="Birthdate:"/>
         <h:inputText id="studentBirthdate" value="#{student.details.birthdate}"/>
         <h:message for="studentBirthdate" value="dd-MMM-yyyy" >dd-MMM-yyyy</h:message>
-          
+           -->
         <h:outputLabel value="Current age:"/>
-        <h:inputText id="studentCurrentAge" value="#{student.currentAge}"/>
-        <h:message for="studentCurrentAge" />
+        <h:outputText value="#{student.currentAge}"/>
+        <!--  <h:inputText id="studentCurrentAge" value=""/>
+        <h:message for="studentCurrentAge" />-->
 
 	</h:panelGrid>
 	</p:panel>
