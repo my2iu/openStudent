@@ -81,7 +81,9 @@
 		<ui:param name="studentSearch" value="#{studentSearch}" />
 	</ui:include>
  </h:outputLabel>
- <p:commandButton immediate="true" type="submit" value="Create New" ajax="false" action="/views/student/create"/>
+ <p:button immediate="true" type="submit" value="Create New" ajax="false" outcome="/views/student/create">
+ <f:param  name="studentId" value="0"/>
+ </p:button>
 </p:panel>
 
 </h:form>
