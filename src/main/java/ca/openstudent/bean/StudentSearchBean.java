@@ -1,7 +1,9 @@
 package ca.openstudent.bean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -213,9 +215,9 @@ public class StudentSearchBean implements Serializable {
 	 * @param String nameToFind
 	 * @return
 	 */
-	public Collection<String> completeFindByName(String nameToFind) {  
+	public List<String> completeFindByName(String nameToFind) {  
 	 
-		return studentService.findByName(nameToFind);
+		return new ArrayList<String>(studentService.findByName(nameToFind));
 	      
 	}  
 
