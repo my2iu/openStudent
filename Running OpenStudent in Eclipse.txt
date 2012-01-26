@@ -97,7 +97,12 @@ DOWNLOAD ADDITIONAL JAR LIBRARIES
 5. Get the Primefaces Cupertino theme
  a) Go to http://repository.primefaces.org/org/primefaces/themes/cupertino/1.0.2/
  b) Download the cupertino-1.0.2.jar
-
+6. Get Apache Derby
+ a) Go to http://db.apache.org/derby/derby_downloads.html
+ b) Choose a 10.8 version of Derby
+ c) Download a "-bin" zip
+ d) In that zip file, get db-derby-..../lib/derby.jar
+ 
 CONFIGURE A SERVER
 
 1. In the bottom right, choose the Servers tab
