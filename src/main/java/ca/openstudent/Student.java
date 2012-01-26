@@ -9,9 +9,13 @@ import java.util.Date;
 
 import javax.faces.model.ListDataModel;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 
 import org.primefaces.model.SelectableDataModel;
 /**
@@ -19,6 +23,9 @@ import org.primefaces.model.SelectableDataModel;
  *
  */
 @Entity
+@NamedQueries({
+	@NamedQuery(name="student.getAll", query = "select s from Student as s")
+})
 public class Student implements Serializable{
 //extends ListDataModel<Student> implements SelectableDataModel<Student>,
 /*  Todo: code for StudentModel, tableDataModel in view, probably need to move this commented code into its own class.
@@ -40,7 +47,10 @@ public class Student implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	private Long id;
+	@GeneratedValue
+	private long id;
+	@Version
+	private long version;
 	private int pen;
 	
 	private String legalLastName;
@@ -246,7 +256,7 @@ public class Student implements Serializable{
      * @see java.lang.Object#equals(java.lang.Object)
      */
     public boolean equals(Object other) {
-        return (other instanceof Student) && (id != null) ? id.equals(((Student) other).id) : (other == this);
+        return (other instanceof Student) && (id == 0 ? this == other : id == ((Student) other).id) ;
     }
     /**
      * public boolean equals(Object object)
@@ -268,7 +278,7 @@ public class Student implements Serializable{
      * @see java.lang.Object#hashCode()
      */
     public int hashCode() {
-        return (id != null) ? (this.getClass().hashCode() + id.hashCode()) : super.hashCode();
+        return (this.getClass().hashCode() + ((id == 0) ? super.hashCode() : (int)id)) ;
     }
 
     /**
