@@ -9,39 +9,35 @@
 
 <ui:composition template="/templates/basicTemplate.xhtml">
 	<ui:define name="content">
+		<h1>This page is for debugging purposes only!</h1>
+		<h3>It lists all students in the database, which could result in a huge result set</h3>
 	
 	    <h:outputLabel value="Student LIST"></h:outputLabel>
 	    <h:outputStylesheet library="css" name="table-style.css"  />
+	    
 	    <h:form>
-	    <h:dataTable value="#{student.studentList}" var="s"
-	    	styleClass="order-table"
-	    	headerClass="order-table-header"
-	    	rowClasses="order-table-odd-row,order-table-even-row">
-	 
-	    	<h:column>
-	    		<f:facet name="header">
-	    		 <h:commandLink action="#{student.sortStudentId}">
-	    		 	Student ID
-	    		 </h:commandLink>
-	    		</f:facet>
-	    		<h:commandLink action="#{student.showDetails(s)}" value="#{s.id}"/>
-	    	</h:column>
-	    	<h:column>
-	    		<f:facet name="header">Legal First Name
-	    		
-	    		</f:facet>
-	    		#{s.legalFirstName}
-	    	</h:column>
-	    	<h:column>
-	    		<f:facet name="header">Legal Middle Name</f:facet>
-	    		#{s.legalMiddleName}
-	    	</h:column>
-	    	<h:column>
-	    		<f:facet name="header">Legal Last Name</f:facet>
-	    		#{s.legalLastName}
-	    	</h:column>
-	    	
-		</h:dataTable>
+		    <h:dataTable var="s" value="#{debug_ListAllStudentsBacking.studentList}">
+				<h:column>
+					<f:facet name="header">Student</f:facet>
+					<h:link outcome="home">edit
+					<f:param name="studentId" value="#{s.id}"/></h:link>
+				</h:column>
+				<h:column>
+		    		<f:facet name="header">Legal First Name
+		    		</f:facet>
+		    		#{s.legalFirstName}
+		    	</h:column>
+		    	<h:column>
+		    		<f:facet name="header">Legal Middle Name</f:facet>
+		    		#{s.legalMiddleName}
+		    	</h:column>
+		    	<h:column>
+		    		<f:facet name="header">Legal Last Name</f:facet>
+		    		#{s.legalLastName}
+		    	</h:column>
+				
+			</h:dataTable>
+	    
 		</h:form>
 	</ui:define>
 </ui:composition>
