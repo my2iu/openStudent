@@ -37,7 +37,7 @@ public class StudentBean implements Serializable {
 	
 	private boolean sortAscending = true;
 	
-	@ManagedProperty ("#{student}")
+//	@ManagedProperty ("#{student}")
 	private Student student;
 
 	public StudentBean(){
@@ -67,7 +67,13 @@ public class StudentBean implements Serializable {
 	}
 	
 	public Student getStudent() {
-		if (student == null) student = StudentRegistry.find(studentIdForView);
+		if (student == null) 
+		{
+			if (studentIdForView == 0)
+				student = new Student();
+			else
+				student = StudentRegistry.find(studentIdForView);
+		}
 		return this.student;
 	}
 	
@@ -90,6 +96,13 @@ public class StudentBean implements Serializable {
 //	            "Sucessful", "Record successfully saved!"));
 		// go back to the same home view
 	    return "list?faces-redirect=true";
+	}
+
+	
+	public String create()
+	{
+		StudentRegistry.persist(student);
+	    return "/welcome?faces-redirect=true";
 	}
 
 	public String findByName(AjaxBehaviorEvent event) {
